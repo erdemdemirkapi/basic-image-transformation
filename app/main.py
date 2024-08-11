@@ -19,6 +19,12 @@ async def log_requests(request: Request, call_next):
     logger.info(f"Received request: {request.method} {request.url}")
     logger.info(f"Request Headers: {request.headers}")
 
+    try:
+        body = await request.json()
+        logger.info(f"Request Body: {body}")
+    except Exception as e:
+        logger.error(f"Error parsing request body: {e}")
+
     response = await call_next(request)
 
     response_time = time.time() - request_time
