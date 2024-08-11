@@ -21,23 +21,23 @@ async def transform_image(request: ImageTransformationRequest):
         image_data = base64.b64decode(request.image)
         image = Image.open(BytesIO(image_data))
     except Exception as e:
-        raise HTTPException(status_code=400, detail="Invalid image data")
+        raise HTTPException(status_code=422, detail="Invalid image")
 
     if request.transformation_type == "grayscale":
         image = ImageOps.grayscale(image)
     elif request.transformation_type == "rotate":
         angle = request.angle
         if not angle:
-            raise HTTPException(status_code=400, detail="Missing parameter angle")
+            raise HTTPException(status_code=422, detail="Missing parameter: angle")
         image = image.rotate(angle)
     elif request.transformation_type == "resize":
         width = request.width
         height = request.height
         if not (width or height):
-            raise HTTPException(status_code=400, detail="Missing parameter width or height")
+            raise HTTPException(status_code=422, detail="Missing parameter: width or height")
         image = image.resize((width, height))
     else:
-        raise HTTPException(status_code=400, detail="Invalid transformation type")
+        raise HTTPException(status_code=422, detail="Invalid transformation type")
 
     buffered = BytesIO()
     image.save(buffered, format="PNG")
