@@ -22,7 +22,7 @@ async def transform_image(request: ImageTransformationRequest):
     try:
         image_data = base64.b64decode(request.image)
         image = Image.open(BytesIO(image_data))
-        logger.info(f"Image decoded successfully for transformation type: {request.transformation_type}")
+        logger.info(f"Image decoded successfully.")
     except Exception as e:
         logger.error(f"Failed to decode image: {str(e)}")
         raise HTTPException(status_code=422, detail="Invalid image")
@@ -51,7 +51,7 @@ async def transform_image(request: ImageTransformationRequest):
         buffered = BytesIO()
         image.save(buffered, format="PNG")
         img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
-        logger.info("Image transformation successful")
+        logger.info("Image transformation successful.")
         return {"transformed_image": img_str}
     except Exception as e:
         logger.error(f"Failed to encode transformed image: {str(e)}")
